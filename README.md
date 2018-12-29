@@ -3,7 +3,7 @@
 This is a general purpose job-runner repogitory, which is especially useful for deep learning training and testing (e.g. grid search hyper parameter tuning).
 
 ## Run demo
-
+The sample codes is for running demo.py with different arguments.
 You need to create jobs in `jobs/todo/` first. The sample script are provided and you can try it by doing 
 ```
 ./add_jobs.py 
