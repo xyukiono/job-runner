@@ -1,0 +1,4 @@
+tensorflow-gpu
+networkx
+hashlib
+flufl.lock
