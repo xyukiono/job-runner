@@ -35,7 +35,7 @@ def check_job_dirs():
 
 def get_command(params):
 
-    cmd = params.script_name
+    cmd = 'OMP_NUM_THREADS=4 python {}'.format(params.script_name)
     cmd += ' --sleep_time={}'.format(params.sleep_time)
     cmd += ' --n_depth={}'.format(params.n_depth)
     cmd += ' --n_channel={}'.format(params.n_channel)
@@ -48,8 +48,6 @@ def write_shell_script(command, memo=None, params=None):
     job_name = 'job-{}.sh'.format(hash_str)
     job_file = osp.join(TODO_DIR, job_name)
 
-    pre_cmd = 'OMP_NUM_THREADS=4 python'
-
     with open(job_file, 'w') as f:
         f.write("#!/bin/bash\n")
         f.write('# [TIME] {}\n'.format(time.asctime()))
@@ -58,9 +56,9 @@ def write_shell_script(command, memo=None, params=None):
         if params is not None and len(params) > 0:
             f.write('# [PARAM] {}\n'.format(params))
 
-        f.write("CMD='{} {}'\n".format(pre_cmd, command))
-        f.write('echo $CMD\n'.format(pre_cmd, command))
-        f.write('eval $CMD\n'.format(pre_cmd, command))
+        f.write("CMD='{}'\n".format(command))
+        f.write('echo $CMD\n')
+        f.write('eval $CMD\n')
     print('Create {}'.format(job_file))
 
 if __name__ == '__main__':
