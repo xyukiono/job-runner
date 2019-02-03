@@ -9,13 +9,13 @@ import glob
 import argparse
 from hyper_params import ParamGenerator
 
-class HyperParams():
-    def __init__(self):
-        self.script_name = 'demo.py'
-        self.sleep_time = 5
-        self.n_depth = 3
-        self.n_channel = 32
-        self.gpu_memory = 0.1
+default_params = {
+    'script_name': 'demo.py',
+    'sleep_time': 5,
+    'n_depth': 3,
+    'n_channel': 32,
+    'gpu_memory': 0.1,
+}
 
 ROOT_JOB = 'jobs'
 TODO_DIR = '{}/todo'.format(ROOT_JOB)
@@ -35,11 +35,11 @@ def check_job_dirs():
 
 def get_command(params):
 
-    cmd = 'OMP_NUM_THREADS=4 python {}'.format(params.script_name)
-    cmd += ' --sleep_time={}'.format(params.sleep_time)
-    cmd += ' --n_depth={}'.format(params.n_depth)
-    cmd += ' --n_channel={}'.format(params.n_channel)
-    cmd += ' --gpu_memory={}'.format(params.gpu_memory)
+    cmd = 'OMP_NUM_THREADS=4 python {}'.format(params['script_name'])
+    cmd += ' --sleep_time={}'.format(params['sleep_time'])
+    cmd += ' --n_depth={}'.format(params['n_depth'])
+    cmd += ' --n_channel={}'.format(params['n_channel'])
+    cmd += ' --gpu_memory={}'.format(params['gpu_memory'])
 
     return cmd
 
@@ -79,16 +79,16 @@ if __name__ == '__main__':
     pg.add_params('n_depth', [3,6,9,12])
     pg.add_params('n_channel', [64,64,32,32], in_series=True)
 
-    all_params = pg.generate(HyperParams(), add_param_string=True)
+    all_params = pg.generate(default_params, add_param_string=True)
 
     if not config.dry_run:
         check_job_dirs()
 
     for n, params in enumerate(all_params):
-        print(n, params.param_string)
+        print(n, params['__PARAM__'])
         cmd = get_command(params)
         if not config.dry_run:
-            write_shell_script(cmd, memo=memo, params=params.param_string)
+            write_shell_script(cmd, memo=memo, params=params['__PARAM__'])
             time.sleep(0.1) # insert sleep to give a timestamp properly
 
     total_num_jobs = len(glob.glob(osp.join(TODO_DIR, 'job*sh')))

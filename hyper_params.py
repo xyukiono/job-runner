@@ -29,26 +29,26 @@ class ParamGenerator(object):
 
         self._add_to_graph(name, values, from_nodes=from_nodes)            
 
-    def generate(self, base_params, add_param_string=True):
+    def generate(self, param_dict, add_param_string=True):
         if len(self._find_node_by_name(self.end_name)) == 0:
             self._close()
         all_nodes = self.graph.nodes(data=True)
         start_node = self._find_node_by_name(self.start_name)[0]
         end_node = self._find_node_by_name(self.end_name)[0]
         
-        param_list = []
+        param_dict_list = []
         
         for tags in nx.all_simple_paths(self.graph, start_node, end_node):
-            param = copy.deepcopy(base_params)
+            param = copy.deepcopy(param_dict)
             param_string = ''
             for tag in tags[1:-1]: # remove start and end tags
                 node = all_nodes[tag]
-                setattr(param, node['name'], node['value'])
+                param[node['name']] = node['value']
                 param_string = osp.join(param_string, '{}-{}'.format(node['name'], node['value']))
             if add_param_string:
-                setattr(param, 'param_string', param_string)
-            param_list.append(param)
-        return param_list
+                param['__PARAM__'] = param_string
+            param_dict_list.append(param)
+        return param_dict_list
 
     def _add_to_graph(self, key, values, from_nodes=None, in_series=False):
         if not isinstance(values, (list, tuple)):

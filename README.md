@@ -38,3 +38,11 @@ It is also possible to run multi process with different gpus by doing something 
 ./run.py --gpu=2 --mode=monitor
 ```
 
+## Generate hyper-param config file as YAML
+Oftenly, it is useful to describe a bunch of params on config.yaml instead of argparse. We provide a example to generate above hyper-param set in jobs/params and run sequently in the same way. 
+
+You can try by doing
+```
+./add_jobs_with_config.py
+./run.py --mode=monitor
+```

@@ -1,0 +1,7 @@
+model:
+    n_depth: 3
+    n_channel: 32
+device:
+    gpu_memory: 0.1
+
+sleep_time: 5
